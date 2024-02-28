@@ -12,6 +12,14 @@ knitr::opts_chunk$set(echo = TRUE,
                       fig.path = "../figures/01_DADA2/") # send any figure output to this folder
 ```
 
+```{r set-seed}
+
+#Any number can be chosen
+set.seed(238428)
+
+
+```
+
 #Goals of this file
 
 1. Use raw fastq files and generate quality plots to assess quality of reads.
@@ -88,15 +96,33 @@ length(filtered_forward_reads)
 
 filtered_reverse_reads <- file.path(filtered_fastqs_path, paste0(samples, "_R2_filtered.fastq.gz"))
 head(filtered_reverse_reads)
+length(filtered_reverse_reads)
 ```
 
 
 
 # Filter and trim reads
+# Parameters of filter and trim **DEPEND ON THE DATASET**
+# maxN = number of N bases. Remove all N's from the data 
+# maxEE = Quality filtering threshold applied to expected errors. Here if there are two expected errors, it's okay. But more than 2, throw away the sequence. Two values: first for forward reads, second for reverse reads
+# trimLeft = Number of nucleotides to remove from the start of each read. We will be removing the first three bases
+
 
 ```{r filter-and-trim}
+#Assign a vector to filtered reads
+#Trim out first 3 bases
+#Write out filtered fastq files
+filtered_reads <-  filterAndTrim(fwd = forward_reads, filt = filtered_forward_reads, rev = reverse_reads, filt.rev = filtered_reverse_reads, maxN = 0, maxEE = c(2,2), trimLeft = 3, truncQ = 2, rm.phix = TRUE, compress = TRUE)
 
 
 
 ```
 
+
+# Session Information
+```{r session-info}
+# Ensure reproducibility
+
+devtools::session_info()
+
+```
